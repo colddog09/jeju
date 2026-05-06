@@ -10,20 +10,18 @@ import DexDetailModal from "./components/DexDetailModal.jsx";
 const CONFIDENCE_THRESHOLD = 0.7;
 
 export default function App() {
-  // Map<entryId, photoUrl> — stores both found state and captured photo
   const [foundMap, setFoundMap] = useState(() => new Map());
   const [previewUrl, setPreviewUrl] = useState(null);
-  const [status, setStatus] = useState("idle"); // idle | analyzing | done
+  const [status, setStatus] = useState("idle");
   const [message, setMessage] = useState("");
   const [activeResult, setActiveResult] = useState(null);
-  const [detailEntry, setDetailEntry] = useState(null); // entry clicked in dex
+  const [detailEntry, setDetailEntry] = useState(null);
   const imgRef = useRef(null);
 
   const { predict, isPlaceholder } = useTeachableModel();
 
   const handlePickImage = (file) => {
     if (previewUrl) {
-      // 도감에 저장된 URL은 해제하지 않음
       const isStored = [...foundMap.values()].includes(previewUrl);
       if (!isStored) URL.revokeObjectURL(previewUrl);
     }
@@ -37,13 +35,8 @@ export default function App() {
     if (!imgRef.current) return;
 
     if (isPlaceholder) {
-      console.warn(
-        "[수월봉 도감] MODEL_URL이 설정되어 있지 않습니다. src/hooks/useTeachableModel.js를 수정하세요.",
-      );
       setStatus("done");
-      setMessage(
-        "⚠️ 모델 URL을 설정하세요 (src/hooks/useTeachableModel.js의 MODEL_URL).",
-      );
+      setMessage("⚠️ 모델 URL을 설정하세요 (src/hooks/useTeachableModel.js).");
       return;
     }
 
@@ -58,47 +51,49 @@ export default function App() {
             next.set(entry.id, photo);
             return next;
           });
-          confetti({ particleCount: 140, spread: 80, origin: { y: 0.4 } });
+          confetti({ particleCount: 160, spread: 90, origin: { y: 0.35 } });
           setActiveResult({ entry, probability: top.probability });
           setMessage(`발견: ${entry.name}`);
         } else {
-          setMessage(
-            `예측된 클래스 "${top.className}"가 도감에 없습니다. 모델 클래스 이름을 확인하세요.`,
-          );
+          setMessage(`"${top.className}" 클래스가 도감에 없습니다.`);
         }
       } else {
         setMessage("다시 한번 선명하게 찍어보세요.");
       }
     } catch (err) {
-      console.error(err);
       setMessage(err.message || "분석 중 오류가 발생했습니다.");
     } finally {
       setStatus("done");
     }
   };
 
-  const handleTileClick = (entry) => {
-    setDetailEntry(entry);
-  };
-
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
-      <div className="max-w-md mx-auto px-4 py-6">
-        <header className="mb-6">
-          <h1 className="text-2xl font-bold tracking-tight">
-            수월봉 지질 도감
+    <div className="min-h-screen bg-[#0d0d14] text-zinc-100">
+      {/* 헤더 */}
+      <header className="relative overflow-hidden px-4 pt-10 pb-6">
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/40 to-transparent pointer-events-none" />
+        <div className="relative max-w-md mx-auto">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-2xl">🌋</span>
+            <span className="text-xs font-semibold tracking-widest text-emerald-400 uppercase">
+              Suwolbong
+            </span>
+          </div>
+          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
+            지질 도감 미션
           </h1>
-          <p className="text-sm text-zinc-400 mt-1">
-            지질 구조를 촬영해 도감을 채워보세요.
+          <p className="text-sm text-zinc-500 mt-1">
+            지질 구조를 촬영해 도감을 완성하세요
           </p>
-        </header>
+        </div>
+      </header>
 
+      <main className="max-w-md mx-auto px-4 pb-12 space-y-8">
         <DexDashboard
           entries={DEX_ENTRIES}
           foundMap={foundMap}
-          onTileClick={handleTileClick}
+          onTileClick={setDetailEntry}
         />
-
         <PhotoAnalyzer
           previewUrl={previewUrl}
           status={status}
@@ -107,16 +102,13 @@ export default function App() {
           imgRef={imgRef}
           onImageLoaded={handleImageLoaded}
         />
-      </div>
+      </main>
 
-      {/* 발견 직후 팝업 */}
       <ResultModal
         entry={activeResult?.entry}
         probability={activeResult?.probability}
         onClose={() => setActiveResult(null)}
       />
-
-      {/* 도감 타일 탭 시 상세 모달 */}
       <DexDetailModal
         entry={detailEntry}
         photoUrl={detailEntry ? foundMap.get(detailEntry.id) : null}
