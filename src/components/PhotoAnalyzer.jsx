@@ -65,7 +65,6 @@ export default function PhotoAnalyzer({
               src={previewUrl}
               alt="업로드된 사진"
               onLoad={onImageLoaded}
-              crossOrigin="anonymous"
               className="block w-full max-h-72 object-contain bg-black"
             />
 

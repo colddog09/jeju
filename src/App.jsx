@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import { DEX_ENTRIES } from "./data/dexEntries.js";
 import { useTeachableModel } from "./hooks/useTeachableModel.js";
@@ -8,9 +8,29 @@ import ResultModal from "./components/ResultModal.jsx";
 import DexDetailModal from "./components/DexDetailModal.jsx";
 
 const CONFIDENCE_THRESHOLD = 0.7;
+const STORAGE_KEY = "suwolbong:found:v1";
+
+const fileToDataUrl = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+
+const loadStoredMap = () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return new Map();
+    const obj = JSON.parse(raw);
+    return new Map(Object.entries(obj));
+  } catch {
+    return new Map();
+  }
+};
 
 export default function App() {
-  const [foundMap, setFoundMap] = useState(() => new Map());
+  const [foundMap, setFoundMap] = useState(loadStoredMap);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [status, setStatus] = useState("idle");
   const [message, setMessage] = useState("");
@@ -20,15 +40,26 @@ export default function App() {
 
   const { predict, isPlaceholder } = useTeachableModel();
 
-  const handlePickImage = (file) => {
-    if (previewUrl) {
-      const isStored = [...foundMap.values()].includes(previewUrl);
-      if (!isStored) URL.revokeObjectURL(previewUrl);
+  useEffect(() => {
+    try {
+      const obj = Object.fromEntries(foundMap);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+    } catch {
+      // 용량 초과 등은 조용히 무시
     }
-    setPreviewUrl(URL.createObjectURL(file));
+  }, [foundMap]);
+
+  const handlePickImage = async (file) => {
     setStatus("analyzing");
     setMessage("");
     setActiveResult(null);
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      setPreviewUrl(dataUrl);
+    } catch {
+      setStatus("done");
+      setMessage("이미지를 읽지 못했습니다.");
+    }
   };
 
   const handleImageLoaded = async () => {
