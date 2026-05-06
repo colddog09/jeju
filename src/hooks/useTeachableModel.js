@@ -34,10 +34,7 @@ export function useTeachableModel() {
     async (imageElement) => {
       const model = await load();
       const predictions = await model.predict(imageElement);
-      return predictions.reduce(
-        (best, p) => (p.probability > best.probability ? p : best),
-        { className: "", probability: 0 },
-      );
+      return [...predictions].sort((a, b) => b.probability - a.probability);
     },
     [load],
   );
