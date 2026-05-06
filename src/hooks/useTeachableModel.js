@@ -5,7 +5,7 @@ import * as tmImage from "@teachablemachine/image";
 // Get it at https://teachablemachine.withgoogle.com → Export Model → Upload (shareable link).
 // The trailing slash is required.
 export const MODEL_URL =
-  "https://teachablemachine.withgoogle.com/models/FAnL5HNVpH/";
+  "https://teachablemachine.withgoogle.com/models/CC13hmCGp/";
 
 const isPlaceholder = (url) => !url || url.includes("REPLACE_ME");
 

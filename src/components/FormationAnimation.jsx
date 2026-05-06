@@ -5,7 +5,7 @@ export default function FormationAnimation({ entryId }) {
     case "pyroclastic": return <PyroclasticAnim />;
     case "bombSag":     return <BombSagAnim />;
     case "ripple":      return <RippleAnim />;
-    case "seaCliff":    return <SeaCliffAnim />;
+    case "seaCliff":    return null;
     case "nokgoTear":   return <NokgoTearAnim />;
     case "japCave":     return <JapCaveAnim />;
     default: return null;
@@ -246,87 +246,7 @@ function RippleAnim() {
   );
 }
 
-/* ─── 4. 해식애: 파도 침식 → 절벽 후퇴 ─────────── */
-function SeaCliffAnim() {
-  const [phase, setPhase] = useState(0);
-  const dur = [2000, 3200, 700, 2200];
-  useEffect(()=>{
-    const t = setTimeout(()=>setPhase(p=>(p+1)%4), dur[phase]);
-    return ()=>clearTimeout(t);
-  },[phase]);
-
-  const notch = phase>=1 ? (phase===1 ? 28 : 22) : 0;
-
-  return (
-    <AnimBox>
-      <style>{`
-        @keyframes waveRoll{0%{transform:translateX(-110px);opacity:0}35%{opacity:.9}75%{transform:translateX(55px);opacity:.55}100%{transform:translateX(75px);opacity:0}}
-        @keyframes collapseDown{0%{transform:translateY(0);opacity:1}100%{transform:translateY(35px);opacity:0}}
-        @keyframes sprayOut{0%{transform:translate(0,0);opacity:1}100%{transform:translate(var(--sx),var(--sy));opacity:0}}
-        @keyframes notchGrow{from{width:0}to{width:28px}}
-      `}</style>
-      <svg viewBox="0 0 280 164" className="w-full h-full" style={{display:"block"}}>
-        <defs>
-          <linearGradient id="sc-ocean" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#0369a1"/><stop offset="100%" stopColor="#0c4a6e"/>
-          </linearGradient>
-          <linearGradient id="sc-cliff" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#6b7280"/><stop offset="100%" stopColor="#4b5563"/>
-          </linearGradient>
-        </defs>
-
-        <rect width="280" height="164" fill="#091525"/>
-
-        {/* 파도들 */}
-        {[0,1,2].map(i=>(
-          <g key={i} style={{animation:`waveRoll ${2.1+i*.45}s ease-in-out ${i*.65}s infinite`}}>
-            <path d={`M-30,${108+i*5} Q5,${100+i*5} 30,${108+i*5} Q55,${116+i*5} 80,${108+i*5} Q105,${100+i*5} 120,${108+i*5}`}
-              fill={`rgba(147,210,240,${.52-i*.1})`}/>
-          </g>
-        ))}
-
-        {/* 바다 */}
-        <rect x={0} y={112} width={188} height={52} fill="url(#sc-ocean)" opacity={.72}/>
-
-        {/* 절벽 본체 */}
-        <rect x={188} y={8} width={92} height={156} fill="url(#sc-cliff)"/>
-
-        {/* 절벽 지층선 */}
-        {[28,50,72,92,112].map((y,i)=>(
-          <line key={i} x1={188} y1={y} x2={280} y2={y}
-            stroke={i%2===0?"#9b8060":"#3d2810"} strokeWidth={8} opacity={.35}/>
-        ))}
-
-        {/* 해식 노치 */}
-        {notch>0 && (
-          <rect x={188} y={110} width={notch} height={26} fill="#091525"
-            style={phase===1?{animation:"notchGrow 3s ease-out both"}:{}}/>
-        )}
-
-        {/* 상부 붕괴 */}
-        {phase===2 && <>
-          <rect x={188} y={8} width={28} height={102} fill="#6b7280"
-            style={{animation:"collapseDown .65s ease-in both"}}/>
-          {[...Array(7)].map((_,i)=>(
-            <circle key={i} cx={202} cy={112} r={2.5} fill="#94a3b8"
-              style={{"--sx":`${(i-3)*16}px`,"--sy":`${-(i%3+1)*18}px`,
-                animation:"sprayOut .6s ease-out both"}}/>
-          ))}
-        </>}
-
-        {/* 해수면 선 */}
-        <line x1={0} y1={112} x2={188} y2={112} stroke="#7dd3fc" strokeWidth={.8} opacity={.38} strokeDasharray="4,3"/>
-
-        <text x={190} y={22} fontSize={7} fill="#e2e8f0" opacity={.45}>해식애</text>
-        <text x={8} y={14} fontSize={8} fill="#7dd3fc" opacity={.7} fontWeight="bold">
-          {["① 파도가 절벽 기저부 반복 타격","② 해식 노치(파식동) 형성 중","③ 상부 암석 붕괴!","④ 절벽이 내륙으로 후퇴"][phase]}
-        </text>
-      </svg>
-    </AnimBox>
-  );
-}
-
-/* ─── 5. 녹고의 눈물: 지하수 침투 → 절벽 용출 ──── */
+/* ─── 4. 녹고의 눈물: 지하수 침투 → 절벽 용출 ──── */
 function NokgoTearAnim() {
   return (
     <AnimBox>
