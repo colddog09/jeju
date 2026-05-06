@@ -83,15 +83,20 @@ export default function PhotoAnalyzer({
 
             {/* 분석 중 오버레이 */}
             {isAnalyzing && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3"
-                style={{ background: "rgba(0,0,0,0.8)" }}>
-                <div className="relative">
-                  <div className="h-12 w-12 rounded-full border-4 border-t-transparent animate-spin"
-                    style={{ borderColor: "rgba(14,165,233,0.3)", borderTopColor: "#0ea5e9" }} />
-                  <div className="absolute inset-0 flex items-center justify-center text-lg">🔍</div>
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 overflow-hidden animate-fade-in"
+                style={{ background: "rgba(0,0,0,0.82)" }}>
+                {/* 스캔라인 */}
+                <div className="absolute inset-x-0 h-0.5 pointer-events-none animate-scan"
+                  style={{ background: "linear-gradient(90deg, transparent, #0ea5e9, #fbbf24, #0ea5e9, transparent)", opacity: 0.7 }} />
+                <div className="relative z-10">
+                  <div className="h-14 w-14 rounded-full border-4 border-t-transparent animate-spin"
+                    style={{ borderColor: "rgba(14,165,233,0.25)", borderTopColor: "#0ea5e9" }} />
+                  <div className="h-14 w-14 rounded-full border-4 border-b-transparent animate-spin absolute inset-0"
+                    style={{ borderColor: "transparent", borderBottomColor: "#fbbf24", animationDuration: "0.8s", animationDirection: "reverse" }} />
+                  <div className="absolute inset-0 flex items-center justify-center text-xl">🔍</div>
                 </div>
-                <div className="text-sm font-semibold" style={{ color: "#e2e8f0" }}>AI 분석 중...</div>
-                <div className="text-xs" style={{ color: "#64748b" }}>잠시만 기다려주세요</div>
+                <div className="text-sm font-semibold z-10" style={{ color: "#e2e8f0" }}>AI 분석 중...</div>
+                <div className="text-xs z-10" style={{ color: "#64748b" }}>잠시만 기다려주세요</div>
               </div>
             )}
           </div>

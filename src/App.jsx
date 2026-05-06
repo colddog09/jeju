@@ -37,6 +37,7 @@ export default function App() {
   const [activeResult, setActiveResult] = useState(null);
   const [detailEntry, setDetailEntry] = useState(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [lastFoundId, setLastFoundId] = useState(null);
   const imgRef = useRef(null);
 
   const { predict, isPlaceholder } = useTeachableModel();
@@ -90,6 +91,8 @@ export default function App() {
             next.set(entry.id, photo);
             return next;
           });
+          setLastFoundId(entry.id);
+          setTimeout(() => setLastFoundId(null), 800);
           confetti({ particleCount: 160, spread: 90, origin: { y: 0.35 } });
           setActiveResult({ entry, probability: top.probability });
           setMessage(`발견: ${entry.name}`);
@@ -195,6 +198,7 @@ export default function App() {
         <DexDashboard
           entries={DEX_ENTRIES}
           foundMap={foundMap}
+          lastFoundId={lastFoundId}
           onTileClick={setDetailEntry}
         />
         <PhotoAnalyzer
@@ -222,7 +226,7 @@ export default function App() {
           onClick={() => setShowResetConfirm(false)}
         >
           <div
-            className="w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl"
+            className="w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl animate-modal-in"
             style={{
               background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
               border: "1px solid rgba(239,68,68,0.3)"

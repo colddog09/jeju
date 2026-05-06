@@ -1,12 +1,14 @@
-export default function DexTile({ entry, index, found, onClick }) {
+export default function DexTile({ entry, index, found, newlyFound, onClick }) {
   return (
     <div
       onClick={found ? onClick : undefined}
-      className="relative aspect-square rounded-2xl flex flex-col items-center justify-center p-2 transition-all duration-200 select-none"
+      className={`relative aspect-square rounded-2xl flex flex-col items-center justify-center p-2 transition-colors duration-300 select-none ${newlyFound ? "animate-tile-found" : ""}`}
       style={found ? {
         background: "linear-gradient(145deg, #1e3a5f 0%, #0f2942 100%)",
         border: "1px solid rgba(251,191,36,0.5)",
-        boxShadow: "0 0 20px -4px rgba(251,191,36,0.3), inset 0 1px 0 rgba(255,255,255,0.05)",
+        boxShadow: newlyFound
+          ? "0 0 32px -4px rgba(251,191,36,0.6), inset 0 1px 0 rgba(255,255,255,0.05)"
+          : "0 0 20px -4px rgba(251,191,36,0.3), inset 0 1px 0 rgba(255,255,255,0.05)",
         cursor: "pointer"
       } : {
         background: "rgba(15,23,42,0.8)",
@@ -15,7 +17,7 @@ export default function DexTile({ entry, index, found, onClick }) {
     >
       {/* 번호 배지 */}
       <div
-        className="absolute top-2 left-2 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
+        className={`absolute top-2 left-2 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center ${newlyFound ? "animate-badge-pop" : ""}`}
         style={found ? {
           background: "rgba(251,191,36,0.2)",
           color: "#fbbf24"
@@ -29,7 +31,7 @@ export default function DexTile({ entry, index, found, onClick }) {
 
       {/* 아이콘 */}
       <div
-        className="text-3xl leading-none mb-1.5 transition-all duration-300"
+        className={`text-3xl leading-none mb-1.5 ${newlyFound ? "animate-icon-reveal" : "transition-all duration-300"}`}
         style={found ? {
           filter: "drop-shadow(0 0 8px rgba(251,191,36,0.5))"
         } : {

@@ -13,3 +13,80 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Segoe UI", sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
+
+/* 모달 등장 */
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.88) translateY(16px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+.animate-modal-in {
+  animation: modal-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* 바텀시트 슬라이드업 */
+@keyframes sheet-up {
+  from { opacity: 0; transform: translateY(60px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-sheet-up {
+  animation: sheet-up 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* 도감 타일 발견 */
+@keyframes tile-found {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.18); }
+  55%  { transform: scale(0.94); }
+  75%  { transform: scale(1.07); }
+  100% { transform: scale(1); }
+}
+.animate-tile-found {
+  animation: tile-found 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* 진행바 펄스 */
+@keyframes bar-glow {
+  0%, 100% { box-shadow: 0 0 6px 1px rgba(251,191,36,0.3); }
+  50%       { box-shadow: 0 0 16px 4px rgba(251,191,36,0.6); }
+}
+.animate-bar-glow {
+  animation: bar-glow 1.4s ease-in-out 3;
+}
+
+/* 아이콘 플립 공개 */
+@keyframes icon-reveal {
+  0%   { transform: rotateY(90deg) scale(0.6); opacity: 0; }
+  60%  { transform: rotateY(-12deg) scale(1.1); opacity: 1; }
+  100% { transform: rotateY(0deg) scale(1); opacity: 1; }
+}
+.animate-icon-reveal {
+  animation: icon-reveal 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both;
+}
+
+/* 뱃지 팝 */
+@keyframes badge-pop {
+  0%   { transform: scale(0); opacity: 0; }
+  70%  { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-badge-pop {
+  animation: badge-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+}
+
+/* 페이드인 */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.animate-fade-in {
+  animation: fade-in 0.3s ease both;
+}
+
+/* 분석중 스캔라인 */
+@keyframes scan-line {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(400%); }
+}
+.animate-scan {
+  animation: scan-line 1.6s linear infinite;
+}

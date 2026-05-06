@@ -9,7 +9,7 @@ export default function ResultModal({ entry, probability, onClose }) {
       onClick={onClose}
     >
       <div
-        className="w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl"
+        className="w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl animate-modal-in"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 상단 배너 */}

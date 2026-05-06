@@ -1,3 +1,5 @@
+import FormationAnimation from "./FormationAnimation.jsx";
+
 export default function DexDetailModal({ entry, photoUrl, onClose }) {
   if (!entry) return null;
 
@@ -8,7 +10,7 @@ export default function DexDetailModal({ entry, photoUrl, onClose }) {
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-t-3xl sm:rounded-3xl overflow-hidden max-h-[92vh] flex flex-col shadow-2xl"
+        className="w-full max-w-md rounded-t-3xl sm:rounded-3xl overflow-hidden max-h-[92vh] flex flex-col shadow-2xl animate-sheet-up"
         style={{
           background: "linear-gradient(180deg, #0c1f3d 0%, #0a1628 100%)",
           border: "1px solid rgba(14,165,233,0.2)"
@@ -89,13 +91,15 @@ export default function DexDetailModal({ entry, photoUrl, onClose }) {
 
           {/* 발생 과정 */}
           <section>
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-3">
               <div className="w-1 h-4 rounded-full" style={{ background: "#fbbf24" }} />
               <h3 className="text-xs font-bold uppercase tracking-widest" style={{ color: "#64748b" }}>
                 발생 과정
               </h3>
             </div>
-            <p className="text-sm leading-relaxed pl-3" style={{ color: "#cbd5e1" }}>
+            {/* 과정 애니메이션 */}
+            <FormationAnimation entryId={entry.id} />
+            <p className="text-sm leading-relaxed pl-3 mt-3" style={{ color: "#cbd5e1" }}>
               {entry.formation}
             </p>
           </section>

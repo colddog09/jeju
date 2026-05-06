@@ -1,6 +1,6 @@
 import DexTile from "./DexTile.jsx";
 
-export default function DexDashboard({ entries, foundMap, onTileClick }) {
+export default function DexDashboard({ entries, foundMap, lastFoundId, onTileClick }) {
   const foundCount = foundMap.size;
   const pct = Math.round((foundCount / entries.length) * 100);
 
@@ -31,7 +31,7 @@ export default function DexDashboard({ entries, foundMap, onTileClick }) {
       <div className="h-2 w-full rounded-full mb-4 overflow-hidden"
         style={{ background: "rgba(14,165,233,0.1)", border: "1px solid rgba(14,165,233,0.15)" }}>
         <div
-          className="h-full rounded-full transition-all duration-700"
+          className={`h-full rounded-full transition-all duration-700 ${lastFoundId ? "animate-bar-glow" : ""}`}
           style={{
             width: `${pct}%`,
             background: "linear-gradient(90deg, #0ea5e9 0%, #fbbf24 60%, #f97316 100%)"
@@ -47,6 +47,7 @@ export default function DexDashboard({ entries, foundMap, onTileClick }) {
             entry={e}
             index={i + 1}
             found={foundMap.has(e.id)}
+            newlyFound={lastFoundId === e.id}
             onClick={() => onTileClick(e)}
           />
         ))}
